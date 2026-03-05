@@ -178,7 +178,7 @@ INSERT INTO validators (key, name, type, config) VALUES
     'stage-directions-format',
     'Formato de direcoes de cena',
     'required_patterns',
-    '{"patterns": ["\\[CENA \\d+\\]", "\\[PAUSA"], "description": "O roteiro deve conter marcacoes de cena [CENA N] e pausas [PAUSA]."}'
+    '{"patterns": ["[CENA", "[PAUSA"], "description": "O roteiro deve conter marcacoes de cena [CENA N] e pausas [PAUSA]."}'::jsonb
   ),
   (
     'no-ssml',
@@ -190,7 +190,7 @@ INSERT INTO validators (key, name, type, config) VALUES
     'no-markdown',
     'Proibido Markdown no roteiro',
     'forbidden_patterns',
-    '{"patterns": ["^#{1,6} ", "\\*\\*", "\\*[^*]", "^- ", "^\\d+\\. "], "description": "O roteiro nao deve conter formatacao Markdown."}'
+    '{"patterns": ["## ", "**", "```"], "description": "O roteiro nao deve conter formatacao Markdown."}'
   )
 ON CONFLICT (key) DO NOTHING;
 

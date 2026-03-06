@@ -65,6 +65,28 @@ export async function createJob(input: {
   return data;
 }
 
+export async function executeJob(jobId: string) {
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const res = await fetch(`${origin}/api/jobs/${jobId}/execute`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new Error("Failed to start execution");
+  return res.json();
+}
+
+export async function createAndExecuteJob(input: {
+  title: string;
+  topic: string;
+  language: string;
+  recipe_key: string;
+}) {
+  const job = await createJob(input);
+  // Trigger execution in background
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  fetch(`${origin}/api/jobs/${job.id}/execute`, { method: "POST" }).catch(console.error);
+  return job;
+}
+
 export async function moveJob(jobId: string, targetColumnId: string) {
   const newState = STATE_TRANSITIONS[targetColumnId];
   if (!newState) throw new Error(`Invalid column: ${targetColumnId}`);

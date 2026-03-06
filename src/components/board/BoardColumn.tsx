@@ -9,9 +9,10 @@ import type { Job, Column } from "@/app/(platform)/board/types";
 interface BoardColumnProps {
   column: Column;
   jobs: Job[];
+  onExecute?: (jobId: string) => void;
 }
 
-export function BoardColumn({ column, jobs }: BoardColumnProps) {
+export function BoardColumn({ column, jobs, onExecute }: BoardColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
   return (
@@ -34,7 +35,7 @@ export function BoardColumn({ column, jobs }: BoardColumnProps) {
       >
         <SortableContext items={jobs.map((j) => j.id)} strategy={verticalListSortingStrategy}>
           {jobs.map((job) => (
-            <BoardCard key={job.id} job={job} />
+            <BoardCard key={job.id} job={job} onExecute={onExecute} />
           ))}
         </SortableContext>
 

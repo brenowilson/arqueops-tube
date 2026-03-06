@@ -15,7 +15,7 @@ import { BoardColumn } from "@/components/board/BoardColumn";
 import { BoardCard } from "@/components/board/BoardCard";
 import { NewVideoDialog } from "@/components/board/NewVideoDialog";
 import { createClient } from "@/lib/supabase/client";
-import { fetchJobs, createJob, moveJob } from "./actions";
+import { fetchJobs, createAndExecuteJob, moveJob, executeJob } from "./actions";
 import type { Job, Column, JobState } from "./types";
 
 const COLUMNS: Column[] = [
@@ -133,9 +133,17 @@ export default function BoardPage() {
 
   async function handleNewVideo(data: { title: string; topic: string; language: string; recipe_key: string }) {
     try {
-      await createJob(data);
+      await createAndExecuteJob(data);
     } catch (err) {
       console.error("Failed to create job:", err);
+    }
+  }
+
+  async function handleExecute(jobId: string) {
+    try {
+      await executeJob(jobId);
+    } catch (err) {
+      console.error("Failed to execute job:", err);
     }
   }
 
@@ -174,7 +182,7 @@ export default function BoardPage() {
         >
           <div className="flex gap-4 pb-4 min-w-max">
             {COLUMNS.map((col) => (
-              <BoardColumn key={col.id} column={col} jobs={getJobsForColumn(col)} />
+              <BoardColumn key={col.id} column={col} jobs={getJobsForColumn(col)} onExecute={handleExecute} />
             ))}
           </div>
 

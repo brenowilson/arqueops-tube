@@ -138,50 +138,6 @@ export async function deleteJob(jobId: string) {
   revalidatePath("/board");
 }
 
-export async function fetchJobDetails(jobId: string) {
-  const { data, error } = await supabase
-    .from("jobs")
-    .select("*")
-    .eq("id", jobId)
-    .single();
-
-  if (error) throw new Error(error.message);
-  return data;
-}
-
-export async function cancelJob(jobId: string) {
-  const { data: current } = await supabase
-    .from("jobs")
-    .select("state")
-    .eq("id", jobId)
-    .single();
-
-  if (!current) throw new Error("Job not found");
-
-  const cancelableStates = ["DRAFT", "READY", "SCRIPTING", "TTS_RUNNING", "RENDER_RUNNING"];
-  if (!cancelableStates.includes(current.state)) {
-    throw new Error(`Cannot cancel job in state: ${current.state}`);
-  }
-
-  const { data, error } = await supabase
-    .from("jobs")
-    .update({ state: "CANCELLED" })
-    .eq("id", jobId)
-    .select()
-    .single();
-
-  if (error) throw new Error(error.message);
-
-  await supabase.from("job_events").insert({
-    job_id: jobId,
-    type: "state_changed",
-    data: { from: current.state, to: "CANCELLED", action: "cancel" },
-  });
-
-  revalidatePath("/board");
-  return data;
-}
-
 export async function fetchJobSteps(jobId: string) {
   const { data, error } = await supabase
     .from("job_steps")

@@ -33,9 +33,10 @@ function formatDate(dateStr: string): string {
 interface BoardCardProps {
   job: Job;
   onExecute?: (jobId: string) => void;
+  onSelect?: (job: Job) => void;
 }
 
-export function BoardCard({ job, onExecute }: BoardCardProps) {
+export function BoardCard({ job, onExecute, onSelect }: BoardCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: job.id });
 
@@ -54,6 +55,7 @@ export function BoardCard({ job, onExecute }: BoardCardProps) {
       style={style}
       {...attributes}
       {...listeners}
+      onClick={() => onSelect?.(job)}
       className={cn(
         "rounded-lg border border-white/5 bg-[#1A1A1A] p-3 cursor-grab active:cursor-grabbing",
         "hover:border-[#D4AF37]/20 hover:bg-[#1E1E1E] transition-colors",

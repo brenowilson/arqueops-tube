@@ -28,14 +28,14 @@ const ADMIN_CARDS = [
     title: "Presets de Voz",
     description: "Vozes TTS configuradas por idioma e estilo.",
     count: 8,
-    href: "/admin/voice-presets",
+    href: "/admin/presets?type=voice",
   },
   {
     icon: VideoIcon,
     title: "Presets de Video",
     description: "Templates de edicao, resolucao e formatos de saida.",
     count: 5,
-    href: "/admin/video-presets",
+    href: "/admin/presets?type=video",
   },
   {
     icon: ServerIcon,
@@ -49,7 +49,7 @@ const ADMIN_CARDS = [
     title: "Base de Conhecimento",
     description: "Documentos e contexto injetados nos agentes durante a producao.",
     count: 23,
-    href: "/admin/knowledge",
+    href: "/admin/knowledge-base",
   },
   {
     icon: ActivityIcon,

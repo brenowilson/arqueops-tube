@@ -22,6 +22,8 @@ import {
 import { PlusIcon, Loader2 } from "lucide-react";
 
 interface NewVideoDialogProps {
+  open?: boolean;
+  onClose?: () => void;
   onCreated?: (data: NewVideoFormData) => void | Promise<void>;
 }
 
@@ -39,8 +41,17 @@ const INITIAL_STATE: NewVideoFormData = {
   recipe_key: "video-completo",
 };
 
-export function NewVideoDialog({ onCreated }: NewVideoDialogProps) {
-  const [open, setOpen] = useState(false);
+export function NewVideoDialog({ open: controlledOpen, onClose, onCreated }: NewVideoDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = (val: boolean) => {
+    if (isControlled) {
+      if (!val) onClose?.();
+    } else {
+      setInternalOpen(val);
+    }
+  };
   const [form, setForm] = useState<NewVideoFormData>(INITIAL_STATE);
   const [saving, setSaving] = useState(false);
 
@@ -66,12 +77,14 @@ export function NewVideoDialog({ onCreated }: NewVideoDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-[#D4AF37] text-black hover:bg-[#C4A030] font-semibold gap-1.5">
-          <PlusIcon className="size-4" />
-          Novo Vídeo
-        </Button>
-      </DialogTrigger>
+      {!isControlled && (
+        <DialogTrigger asChild>
+          <Button className="bg-[#D4AF37] text-black hover:bg-[#C4A030] font-semibold gap-1.5">
+            <PlusIcon className="size-4" />
+            Novo Vídeo
+          </Button>
+        </DialogTrigger>
+      )}
 
       <DialogContent className="sm:max-w-md bg-[#111111] border-white/10">
         <DialogHeader>

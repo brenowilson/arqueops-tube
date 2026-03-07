@@ -10,9 +10,10 @@ interface BoardColumnProps {
   column: Column;
   jobs: Job[];
   onExecute?: (jobId: string) => void;
+  onSelect?: (job: Job) => void;
 }
 
-export function BoardColumn({ column, jobs, onExecute }: BoardColumnProps) {
+export function BoardColumn({ column, jobs, onExecute, onSelect }: BoardColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
   return (
@@ -35,7 +36,7 @@ export function BoardColumn({ column, jobs, onExecute }: BoardColumnProps) {
       >
         <SortableContext items={jobs.map((j) => j.id)} strategy={verticalListSortingStrategy}>
           {jobs.map((job) => (
-            <BoardCard key={job.id} job={job} onExecute={onExecute} />
+            <BoardCard key={job.id} job={job} onExecute={onExecute} onSelect={onSelect} />
           ))}
         </SortableContext>
 
